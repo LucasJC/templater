@@ -1,8 +1,10 @@
-name: Temaplter - GraalVM Native Image builds
+name: Templater - GraalVM Native Image builds
 on:
   push:
     tags:        
       - '*'
+permissions:
+  contents: write
 jobs:
   build:
     name: Build on ${{ matrix.os }}
