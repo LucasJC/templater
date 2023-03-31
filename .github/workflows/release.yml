@@ -50,10 +50,12 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
-          path: artifacts/
+          path: ./artifacts/
+      
+      - run: ls ./artifacts
       
       - name: Upload artifacts to release
         uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: /home/runner/work/templater/templater/artifacts/*
+          files: ./artifacts/*
