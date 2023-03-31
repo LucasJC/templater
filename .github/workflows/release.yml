@@ -56,4 +56,4 @@ jobs:
         uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: artifacts/*
+          files: /home/runner/work/templater/templater/artifacts/*
