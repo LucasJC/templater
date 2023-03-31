@@ -25,7 +25,9 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Execute Gradle build
-        run: ./gradlew nativeCompile
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: nativeCompile
       
       - name: Upload binary
         uses: actions/upload-artifact@v2
