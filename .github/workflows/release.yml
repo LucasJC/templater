@@ -9,7 +9,6 @@ jobs:
           
   build:
     name: Build job on ${{ matrix.os }}
-    needs: create_release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
