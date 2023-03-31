@@ -6,24 +6,6 @@ on:
 permissions:
   contents: write
 jobs:
-
-  create_release:
-      name: Create release job
-      runs-on: ubuntu-latest
-      outputs:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-      steps:
-      - uses: actions/create-release@latest
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            ${{ steps.Changelog.outputs.changelog }}
-          draft: true
-          prerelease: false
           
   build:
     name: Build job on ${{ matrix.os }}
@@ -59,5 +41,19 @@ jobs:
         with:
           name: templater-${{ matrix.os }}
           path: build/native/nativeCompile/templater*
-          
 
+  upload_artifacts:
+      name: Update release
+      runs-on: ubuntu-latest
+      steps:
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts/
+      
+      - name: Upload artifacts to release
+        uses: pyTooling/Actions/releaser@r0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: artifacts/*
