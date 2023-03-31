@@ -6,8 +6,28 @@ on:
 permissions:
   contents: write
 jobs:
+
+  create_release:
+      name: Create release job
+      runs-on: ubuntu-latest
+      outputs:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+      steps:
+      - uses: actions/create-release@latest
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
+          draft: true
+          prerelease: false
+          
   build:
-    name: Build on ${{ matrix.os }}
+    name: Build job on ${{ matrix.os }}
+    needs: create_release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -33,21 +53,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: nativeCompile
-      
+  
       - name: Upload binary
         uses: actions/upload-artifact@v2
         with:
           name: templater-${{ matrix.os }}
           path: build/native/nativeCompile/templater*
           
-      - name: Create Release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            ${{ steps.Changelog.outputs.changelog }}
-          draft: false
-          prerelease: false
+
