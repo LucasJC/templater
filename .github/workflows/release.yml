@@ -43,6 +43,7 @@ jobs:
 
   upload_artifacts:
       name: Update release
+      needs: build
       runs-on: ubuntu-latest
       steps:
       
