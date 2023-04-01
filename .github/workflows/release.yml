@@ -67,7 +67,7 @@ jobs:
             ./artifacts/*
             artifacts\*
             artifacts/*
-            ${{github.workspace}}\*
-            ${{github.workspace}}/*
+            ${{github.workspace}}\artifacts\*
+            ${{github.workspace}}/artifacts/*
           tag_name: ${{ github.ref }}
           
