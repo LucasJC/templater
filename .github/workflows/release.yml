@@ -53,16 +53,20 @@ jobs:
         with:
           path: ./artifacts/*
       
-      - run: ls -hlrt artifacts
+      - run: ls -hlrt ./artifacts
       
-      - name: Gradle execution permissions
-        run: chmod 777 -R ./artifacts
-      
+      - run: |
+          cp artifacts/macos-latest/templater artifacts/templater-macos
+          cp artifacts/windows-latest/templater artifacts/templater-windows.exe
+          cp artifacts/ubuntu-latest/templater artifacts/templater-ubuntu
+          
+      - run: ls -hlrt ./artifacts
+    
       - name: Release
         uses: softprops/action-gh-release@v0.1.15
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ${{github.workspace}}/artifacts/**
+            ${{github.workspace}}/artifacts/*
           tag_name: ${{ github.ref }}
           
