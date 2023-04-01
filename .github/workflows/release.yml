@@ -64,3 +64,6 @@ jobs:
             artifacts/templater-macos-latest
             artifacts/templater-ubuntu-latest
             artifacts/templater-windows-latest
+            templater-macos-latest
+            templater-ubuntu-latest
+            templater-windows-latest
