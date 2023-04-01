@@ -59,7 +59,7 @@ jobs:
         run: chmod 777 -R ./artifacts
       
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v0.1.15
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
@@ -70,3 +70,4 @@ jobs:
             ${{github.workspace}}\*
             ${{github.workspace}}/*
           tag_name: ${{ github.ref }}
+          
