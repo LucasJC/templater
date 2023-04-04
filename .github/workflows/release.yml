@@ -51,9 +51,13 @@ jobs:
         id: download
         uses: actions/download-artifact@v3
         with:
-          path: ./artifacts/*
+          path: ./artifacts
       
-      - run: ls -hlrt ./artifacts
+      - run: |
+          ls -hlrt ./artifacts
+          ls -hlrt artifacts/templater-macos-latest
+          ls -hlrt artifacts/templater-windows-latest
+          ls -hlrt artifacts/templater-ubuntu-latest
       
       - run: |
           cp artifacts/templater-macos-latest/templater artifacts/templater-macos
