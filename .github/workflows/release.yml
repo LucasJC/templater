@@ -73,4 +73,5 @@ jobs:
           files: |
             ${{github.workspace}}/artifacts/*
           tag_name: ${{ github.ref }}
+          generate_release_notes: true
           
