@@ -56,9 +56,9 @@ jobs:
       - run: ls -hlrt ./artifacts
       
       - run: |
-          cp artifacts/macos-latest/templater artifacts/templater-macos
-          cp artifacts/windows-latest/templater artifacts/templater-windows.exe
-          cp artifacts/ubuntu-latest/templater artifacts/templater-ubuntu
+          cp artifacts/templater-macos-latest/templater artifacts/templater-macos
+          cp artifacts/templater-windows-latest/templater.exe artifacts/templater-windows.exe
+          cp artifacts/templater-ubuntu-latest/templater artifacts/templater-ubuntu
           
       - run: ls -hlrt ./artifacts
     
