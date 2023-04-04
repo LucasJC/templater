@@ -1,0 +1,77 @@
+name: Templater - GraalVM Native Image builds
+on:
+  push:
+    tags:        
+      - '*'
+permissions:
+  contents: write
+jobs:
+          
+  build:
+    name: Build job on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          version: '22.3.0'
+          java-version: '17'
+          components: 'native-image'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Gradle execution permissions
+        run: chmod +x ./gradlew
+
+      - name: Execute Gradle build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: nativeCompile
+  
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: templater-${{ matrix.os }}
+          path: build/native/nativeCompile/templater*
+
+  upload_artifacts:
+      name: Update release
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+      
+      - name: Download all artifacts
+        id: download
+        uses: actions/download-artifact@v3
+        with:
+          path: ./artifacts
+      
+      - run: |
+          ls -hlrt ./artifacts
+          ls -hlrt artifacts/templater-macos-latest
+          ls -hlrt artifacts/templater-windows-latest
+          ls -hlrt artifacts/templater-ubuntu-latest
+      
+      - run: |
+          cp artifacts/templater-macos-latest/templater artifacts/templater-macos
+          cp artifacts/templater-windows-latest/templater.exe artifacts/templater-windows.exe
+          cp artifacts/templater-ubuntu-latest/templater artifacts/templater-ubuntu
+          
+      - run: ls -hlrt ./artifacts
+    
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.15
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ${{github.workspace}}/artifacts/*
+          tag_name: ${{ github.ref }}
+          generate_release_notes: true
+          
